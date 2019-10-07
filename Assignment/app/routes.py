@@ -70,17 +70,3 @@ def register():
     return render_template('register.html', msg=msg)
 
 
-# @webapp.route('/')
-# @webapp.route('/index')
-# def index():
-#     if 'Authenticated' not in session:
-#         return redirect(url_for('login'))
-#     
-#     posts = [
-#         {
-#             'author': {'username': 'SunShine'},
-#             'body': 'She will be back, I thought.'
-#         }
-#     ]
-#     return render_template('index.html', title='Home', posts=posts)
-
