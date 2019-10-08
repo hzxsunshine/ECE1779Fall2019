@@ -8,6 +8,18 @@ I will add an instruction later.
 
 Instruction:
 1. Set database;
+
+MySQL code for creating a table:
+
+  CREATE TABLE IF NOT EXISTS `user` (
+	`id` int(11) NOT NULL AUTO_INCREMENT,
+  	`username` varchar(50) NOT NULL,
+  	`password` varchar(255) NOT NULL,
+    PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+
+In the config.py file, you need to set up your own database first!
+
 2. Run the flask:
   I create a virtual env to run the flask:
     by using python3: 
