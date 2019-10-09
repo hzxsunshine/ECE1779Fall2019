@@ -33,6 +33,23 @@ def check_name(username):
     row = cursor.fetchone()
     return row
 
+def check_password(username, password):
+    # Create variables for easy access
+    # Check if account exists using MySQL
+    cnx = get_db()
+    cursor = cnx.cursor()
+    query = 'SELECT salt FROM user WHERE (username) = %s'
+    cursor.execute(query, (username,))
+    salts = cursor.fetchone()
+    true_password = hashed_password(password, salts[0])
+
+    query = 'SELECT * FROM user WHERE username = %s AND password = %s'
+    cursor.execute(query, (username, true_password))
+    # Fetch one record and return result
+    return cursor.fetchone()
+
+
+# If account exists in accounts table in out database
 
 def save_file(username, file, filename):
     #save original file
@@ -49,4 +66,3 @@ def save_file(username, file, filename):
 
     #save thumbnail file
     thumbnails(PATH)
-

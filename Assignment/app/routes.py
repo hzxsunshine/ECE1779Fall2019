@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for, session
 import re
 from .database import connect_to_database,  get_db, teardown_db
 from app import webapp
-from .utils import check_name, save_reg
+from .utils import check_name, save_reg, check_password
 
 @webapp.route('/login', methods=['GET', 'POST'])
 def login():
@@ -12,17 +12,8 @@ def login():
     msg = ''
     # Check if "username" and "password" POST requests exist (user submitted form)
     if request.method == 'POST' and 'username' in request.form and 'password' in request.form:
-        # Create variables for easy access
-        username = request.form['username']
-        password = request.form['password']
-        # Check if account exists using MySQL
-        cnx = get_db()
-        cursor = cnx.cursor()
-        query = 'SELECT * FROM user WHERE username = %s AND password = %s'
-        cursor.execute(query, (username, password))
-        # Fetch one record and return result
-        account = cursor.fetchone()
-        # If account exists in accounts table in out database
+        account = check_password(request.form['username'],request.form['password'])
+        
         if account:
             # Create session data, we can access this data in other routes
             session['Authenticated'] = True
@@ -63,24 +54,9 @@ def register():
             username = request.form['username']
             password = request.form['password']
             save_reg(username,password)
+            msg = 'Successful Registered'
     elif request.method == 'POST':
         # Form is empty... (no POST data)
         msg = 'Please fill out the form!'
     # Show registration form with message (if any)
     return render_template('register.html', msg=msg)
-
-
-# @webapp.route('/')
-# @webapp.route('/index')
-# def index():
-#     if 'Authenticated' not in session:
-#         return redirect(url_for('login'))
-#     
-#     posts = [
-#         {
-#             'author': {'username': 'SunShine'},
-#             'body': 'She will be back, I thought.'
-#         }
-#     ]
-#     return render_template('index.html', title='Home', posts=posts)
-
