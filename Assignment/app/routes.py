@@ -60,3 +60,5 @@ def register():
         msg = 'Please fill out the form!'
     # Show registration form with message (if any)
     return render_template('register.html', msg=msg)
+
+

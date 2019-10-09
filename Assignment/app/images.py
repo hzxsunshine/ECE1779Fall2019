@@ -46,7 +46,7 @@ def upload():
 # def send_image(filename):
 #     return send_from_directory("images", filename)
 
-@webapp.route('/gallery')
+@webapp.route('/gallery', methods=['GET'])
 def gallery():
     if 'Authenticated' not in session:
         return redirect(url_for('login'))
@@ -56,6 +56,22 @@ def gallery():
     app_path = os.path.dirname(__file__)
     stat_path = os.path.join(app_path, 'static')
     USER_PATH = os.path.join(stat_path, username)
+    ORIGIN_PATH = os.path.join(USER_PATH, 'origin')
+    OCR_PATH = os.path.join(USER_PATH,'ocr')
+    THUMB_PATH = os.path.join(USER_PATH,'thumbnails')
 
-    image_names = os.listdir(USER_PATH)
-    return render_template("gallery.html", image_names=image_names, username=username)
+    origin_names = os.listdir(ORIGIN_PATH)
+    ocr_names = os.listdir(OCR_PATH)
+    thumb_names = os.listdir(THUMB_PATH)
+
+    return render_template("gallery.html", image_names=thumb_names, username=username)
+
+@webapp.route('/detail/<image_name>', methods=['GET'])
+def detail(image_name):
+    if 'Authenticated' not in session:
+        return redirect(url_for('login'))
+
+    username = session['username']
+    return render_template("detail.html", username=username, image_name=image_name)
+
+

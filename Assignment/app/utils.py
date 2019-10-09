@@ -24,6 +24,12 @@ def save_reg(username,password):
     ROOT_PATH = os.path.join(os.path.dirname(__file__),'static')
     PATH_USER = os.path.join(ROOT_PATH,username)
     os.mkdir(PATH_USER)
+    PATH_USER_THUMBNAILS = os.path.join(PATH_USER, 'thumbnails')
+    PATH_USER_ORIGIN = os.path.join(PATH_USER, 'origin')
+    PATH_USER_OCR = os.path.join(PATH_USER, 'ocr')
+    os.mkdir(PATH_USER_OCR)
+    os.mkdir(PATH_USER_ORIGIN)
+    os.mkdir(PATH_USER_THUMBNAILS)
 
 def check_name(username):
     cnx = get_db()
@@ -56,13 +62,21 @@ def save_file(username, file, filename):
     app_path = os.path.dirname(__file__)
     stat_path = os.path.join(app_path, 'static')
     USER_PATH = os.path.join(stat_path, username)
-    PATH = os.path.join(USER_PATH, filename)
-    file.save(PATH)
+
+    ROOT_PATH = os.path.join(USER_PATH, 'origin')
+    ORIGIN_PATH = os.path.join(ROOT_PATH,filename)
+    file.save(ORIGIN_PATH)
 
     #save ocr file
+    OCR_PATH = os.path.join(USER_PATH, 'ocr')
+    OCR_PATH = os.path.join(OCR_PATH,filename)
     detection_img = text_detection.ap()
-    detection_img.img = PATH
-    ocr_PATH = detection_img.rectangle_image()
+    detection_img.img = ORIGIN_PATH
+    detection_img.path = OCR_PATH
+    detection_img.rectangle_image()
 
     #save thumbnail file
-    thumbnails(PATH)
+    THUMBNAILS_PATH = os.path.join(USER_PATH, 'thumbnails')
+    THUMBNAILS_PATH = os.path.join(THUMBNAILS_PATH, filename)
+    thumbnails(ORIGIN_PATH, THUMBNAILS_PATH)
+

@@ -145,3 +145,14 @@ body.loggedin {
 	padding: 5px;
 	margin: 0 0 10px 0;
 }
+
+#open-popup {padding:20px}
+.white-popup {
+  position: relative;
+  background: #FFF;
+  padding: 40px;
+  width: auto;
+  max-width: 200px;
+  margin: 20px auto;
+  text-align: center;
+}

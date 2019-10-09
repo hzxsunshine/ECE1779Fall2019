@@ -115,8 +115,5 @@ class ap():
 
 	# show the output image
 	#specific the detailed path
-		path = self.img
-		name = path.split("/")[-1]
-		path = path.replace(name, 'ocr_' + name)
-		cv2.imwrite(path,orig)
+		cv2.imwrite(self.path,orig)
 		#return 'ocr_' + name
