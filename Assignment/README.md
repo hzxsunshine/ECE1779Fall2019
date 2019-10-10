@@ -20,6 +20,16 @@ MySQL code for creating a table:
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
+
+create table images(
+		id int,
+        imagename varchar(50) NOT NULL,
+        origin varchar(100) NOT NULL,
+        ocr varchar(100) NOT NULL,
+        thumbnails varchar(100) NOT NULL,
+        foreign key (id) references user(id)
+);
+        
 In the config.py file, you need to set up your own database first!
 
 ### 2. Run the flask:
