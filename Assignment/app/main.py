@@ -11,3 +11,4 @@ def main():
         return redirect(url_for('login'))
     username = session['username']
     return render_template("main.html",username=username)
+

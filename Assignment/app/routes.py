@@ -12,8 +12,11 @@ def login():
     msg = ''
     # Check if "username" and "password" POST requests exist (user submitted form)
     if request.method == 'POST' and 'username' in request.form and 'password' in request.form:
+        if not check_name(request.form['username']):
+            msg = 'Invalid Username'
+            return render_template('login.html', msg=msg)
+
         account = check_password(request.form['username'],request.form['password'])
-        
         if account:
             # Create session data, we can access this data in other routes
             session['Authenticated'] = True

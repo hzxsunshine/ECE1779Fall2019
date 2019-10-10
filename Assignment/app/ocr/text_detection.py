@@ -34,7 +34,7 @@ class ap():
 			"feature_fusion/concat_3"]
 
 		# load the pre-trained EAST text detector
-		net = cv2.dnn.readNet('./ocr/frozen_east_text_detection.pb')
+		net = cv2.dnn.readNet('./app/ocr/frozen_east_text_detection.pb')
 
 		# construct a blob from the image and then perform a forward pass of
 		# the model to obtain the two output layer sets

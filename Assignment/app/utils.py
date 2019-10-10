@@ -3,6 +3,15 @@ from .database import connect_to_database,  get_db, teardown_db
 import os
 import  app.ocr.text_detection as text_detection
 from .ocr.thumbnails import thumbnails
+from datetime import timedelta
+from app import webapp
+from flask import session
+
+#the login-in will be expired in 48 hours
+@webapp.before_request
+def make_session_permanent():
+    session.permanent = True
+    webapp.permanent_session_lifetime = timedelta(hours=48)
 
 #hashfunction
 def hashed_password(word, salt):
@@ -80,3 +89,14 @@ def save_file(username, file, filename):
     THUMBNAILS_PATH = os.path.join(THUMBNAILS_PATH, filename)
     thumbnails(ORIGIN_PATH, THUMBNAILS_PATH)
 
+    # #database savefile:
+    cnx = get_db()
+    cursor = cnx.cursor()
+    query = 'SELECT id FROM user WHERE (username) = %s'
+    cursor.execute(query, (username,))
+    row = cursor.fetchone()
+    user_id = int(row[0])
+
+    query = ''' INSERT INTO images (id, imagename, origin,ocr,thumbnails) VALUES (%s,%s,%s, %s, %s)'''
+    cursor.execute(query, (user_id, filename,ORIGIN_PATH,OCR_PATH,THUMBNAILS_PATH))
+    cnx.commit()
