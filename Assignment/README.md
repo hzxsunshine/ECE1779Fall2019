@@ -48,6 +48,7 @@ In the config.py file, you need to set up your own database first!
 ## To do lists:
 - Modal Images.(DONE)
 - Invalid password and username warning.(DONE)
+- Store image paths to database.(DONE)
 
 1. Upload app to EC2.
 2. Image delete function.
