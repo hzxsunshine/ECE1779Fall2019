@@ -1,0 +1,5 @@
+werkzeug
+flask
+mysql-connector-python
+wand
+opencv-python
