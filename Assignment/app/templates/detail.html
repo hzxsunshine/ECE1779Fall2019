@@ -15,9 +15,9 @@
         </div>
         <hr>
             <h2 class="h2">Origin Image</h2>
-            <img class="img-responsive" src="../static/{{username}}/origin/{{image_name}}">
+            <a href="{{url_for('gallery')}}"><img class="img-responsive" src="../static/{{username}}/origin/{{image_name}}"></a>
             <h2 class="h2">OCR Image</h2>
-            <img class="img-responsive" src="../static/{{username}}/ocr/{{image_name}}">
+            <a href="{{url_for('gallery')}}"><img class="img-responsive" src="../static/{{username}}/ocr/{{image_name}}"></a>
 
     </div>
 </div>
