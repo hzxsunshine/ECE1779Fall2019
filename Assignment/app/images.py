@@ -3,7 +3,7 @@ from flask import request, send_from_directory
 import os
 from app import webapp
 from .utils import save_file
-
+from werkzeug.utils import secure_filename
 
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 
@@ -20,24 +20,34 @@ def upload():
 
     if session['username']:
         username = session['username']
+    else:
+        return redirect(url_for('login'))
 
     if request.method == 'POST':
         # check if the post request has the file part
-        if 'file' not in request.files:
+        if 'files' not in request.files:
             return render_template('upload.html', msg='No Selected File')
-        file = request.files['file']
+
+        #file = request.files['file']
+        files = request.files.getlist('files')
+
         # if user does not select file, browser also
         # submit an empty part without filename
-        if file.filename == '':
-            return   render_template('upload.html', msg='No Selected File')
-        
-        if not allowed_file(file.filename):
-            return   render_template('upload.html', msg='Invalid File Type')
-        
-        if file and allowed_file(file.filename):
-            filename = file.filename
-            save_file(username, file, filename)
-            return render_template('upload.html', msg='Successfully Uploaded')
+        for file in files:
+            if file.filename == '':
+                return   render_template('upload.html', msg='No Selected File')
+
+            if not allowed_file(file.filename):
+                return   render_template('upload.html', msg='Invalid File Type')
+
+            if request.content_length > 5 * 1024 * 1024:
+                return render_template('upload.html', msg='Files are Too Big!')
+
+        for file in files:
+            if file and allowed_file(file.filename):
+                filename = secure_filename(file.filename)
+                save_file(username, file, filename)
+        return render_template('upload.html', msg='Successfully Uploaded')
 
     return render_template('upload.html', msg='Pleas Upload an Image')
 

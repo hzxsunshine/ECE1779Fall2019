@@ -3,11 +3,12 @@ import re
 from .database import connect_to_database,  get_db, teardown_db
 from app import webapp
 from .utils import check_name, save_reg, check_password
+from werkzeug.utils import secure_filename
 
 @webapp.route('/login', methods=['GET', 'POST'])
 def login():
     if 'Authenticated' in session:
-        return redirect(url_for('upload'))
+        return redirect(url_for('main'))
     # Output message if something goes wrong...
     msg = ''
     # Check if "username" and "password" POST requests exist (user submitted form)
@@ -43,17 +44,28 @@ def logout():
 
 @webapp.route('/register', methods=['GET', 'POST'])
 def register():
+    rules = [lambda s: any(x.isupper() for x in s),  # must have at least one uppercase
+             lambda s: any(x.islower() for x in s),  # must have at least one lowercase
+             lambda s: any(x.isdigit() for x in s),  # must have at least one digit
+             lambda s: len(s) >= 7  # must be at least 7 characters
+             ]
     # Output message if something goes wrong...
     msg = ''
     # Check if "username", "password" and "email" POST requests exist (user submitted form)
     if request.method == 'POST' and 'username' in request.form and 'password' in request.form and 'repassword' in request.form:
         if request.form['password'] != request.form['repassword']:
             msg = 'Password and Repeated Password Should Be the Same!'
+            return render_template('register.html', msg=msg)
         # check the availability of username
-        elif check_name(request.form['username']) is not None:
+        if check_name(request.form['username']) is not None:
             msg = 'Choose Another Cool Username Please!'
+            return render_template('register.html', msg=msg)
+        if len(request.form['username']) > 30:
+            msg = 'Username is too long!'
+            return render_template('register.html', msg=msg)
+        if not all(rule(request.form['password']) for rule in rules):
+            msg = 'Please use a stronger password'
         else:
-            # Create variables for easy access
             username = request.form['username']
             password = request.form['password']
             save_reg(username,password)
