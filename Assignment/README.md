@@ -41,9 +41,9 @@ In the config.py file, you need to set up your own database first!
 - Store image paths to database.(DONE)
 - Multiple Upload.(Done)
 1. Upload app to EC2.(DONE)
+1. connect to ec2 website from the outside internet;(DONE)
 
 EMERGENCY:
-1. connect to ec2 website from the outside internet;
 2. gunicorn start.sh script;
 3. A1 report.
 
