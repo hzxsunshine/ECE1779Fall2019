@@ -60,6 +60,9 @@ def register():
         if check_name(request.form['username']) is not None:
             msg = 'Choose Another Cool Username Please!'
             return render_template('register.html', msg=msg)
+        if len(request.form['username']) > 50:
+            msg = 'Username is too long!'
+            return render_template('register.html', msg=msg)
         if len(request.form['username']) > 30:
             msg = 'Username is too long!'
             return render_template('register.html', msg=msg)
@@ -81,4 +84,39 @@ def register():
 def not_found_error(error):
     return render_template('404.html'), 404
 
+
+@webapp.route('/api/register', methods=['GET'])
+def script():
+    return render_template("api_register.html")
+#API:
+@webapp.route('/api/register', methods=['POST'])
+def api_register():
+    rules = [lambda s: any(x.isupper() for x in s),  # must have at least one uppercase
+             lambda s: any(x.islower() for x in s),  # must have at least one lowercase
+             lambda s: any(x.isdigit() for x in s),  # must have at least one digit
+             lambda s: len(s) >= 7  # must be at least 7 characters
+             ]
+    # Output message if something goes wrong...
+    msg = ''
+    # Check if "username", "password" and "email" POST requests exist (user submitted form)
+    if request.method == 'POST' and 'username' in request.form and 'password' in request.form:
+        # check the availability of username
+        if check_name(request.form['username']) is not None:
+            msg = 'Choose Another Cool Username Please!'
+            return render_template('api_register.html', msg=msg)
+        if len(request.form['username']) > 30:
+            msg = 'Username is too long!'
+            return render_template('api_register.html', msg=msg)
+        if not all(rule(request.form['password']) for rule in rules):
+            msg = 'Please use a stronger password'
+        else:
+            username = request.form['username']
+            password = request.form['password']
+            save_reg(username,password)
+            msg = 'Successful Registered'
+    elif request.method == 'POST':
+        # Form is empty... (no POST data)
+        msg = 'Please fill out the form!'
+    # Show registration form with message (if any)
+    return render_template('api_register.html', msg=msg)
 

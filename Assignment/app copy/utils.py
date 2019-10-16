@@ -100,3 +100,12 @@ def save_file(username, file, filename):
     query = ''' INSERT INTO images (id, imagename, origin,ocr,thumbnails) VALUES (%s,%s,%s, %s, %s)'''
     cursor.execute(query, (user_id, filename,ORIGIN_PATH,OCR_PATH,THUMBNAILS_PATH))
     cnx.commit()
+
+
+
+def validator(username, password):
+    if check_name(username) is None:
+        return 'Username/Password is Invalidated'
+    if check_password(username,password) is None:
+        return 'Username/Password is Invalidated'
+
