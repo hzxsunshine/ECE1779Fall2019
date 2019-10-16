@@ -1,5 +1,5 @@
 db_config = {'user': 'root',
-             'password': 'ece1779pass',
+             'password': 'hzx960209',
              'host': '127.0.0.1',
-             'database': 'A1'}
+             'database': 'ece1779'}
 
