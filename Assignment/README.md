@@ -3,11 +3,6 @@ ECE1779
 Assignment 1.
 Author: Zixuan Hu
 
-## NEW UPDATE:
-ADD A start:
-Now, simply run run.py
-the host is still 127.0.0.1
-
 ## Instruction:
 ### 1. Set database;
 
