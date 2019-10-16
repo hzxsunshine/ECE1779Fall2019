@@ -48,12 +48,12 @@ In the config.py file, you need to set up your own database first!
 1. Upload app to EC2.(DONE)
 
 EMERGENCY:
-1. connect ec2 website from the outside internet.
-2. gunicorn start.sh script.
+1. connect ec2 website from the outside internet;
+2. gunicorn start.sh script;
 3. A1 report.
 
 FOR OPTIMIZATION:
-2. Image delete function.
+2. Image delete function;
 3. Make pages looks better.
 
 ... what else?
