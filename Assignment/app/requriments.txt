@@ -1,5 +1,1 @@
-werkzeug
-flask
-mysql-connector-python
-wand
-opencv-python
+werkzeug flask mysql-connector-python wand opencv-python
