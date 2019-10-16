@@ -1,2 +1,2 @@
 from app import webapp
-webapp.run(host='127.0.0.1',debug=True)
+webapp.run(host='0.0.0.0',debug=True)
