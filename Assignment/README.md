@@ -12,23 +12,8 @@ the host is still 127.0.0.1
 ### 1. Set database;
 
 MySQL code for creating a table:
-
-  CREATE TABLE IF NOT EXISTS `user` (
-	`id` int(11) NOT NULL AUTO_INCREMENT,
-  	`username` varchar(50) NOT NULL,
-  	`password` varchar(255) NOT NULL,
-    PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
-
-
-create table images(
-		id int,
-        imagename varchar(50) NOT NULL,
-        origin varchar(100) NOT NULL,
-        ocr varchar(100) NOT NULL,
-        thumbnails varchar(100) NOT NULL,
-        foreign key (id) references user(id)
-);
+run:
+mysql -u username -p password <A1.sql
         
 In the config.py file, you need to set up your own database first!
 
@@ -60,8 +45,14 @@ In the config.py file, you need to set up your own database first!
 - Invalid password and username warning.(DONE)
 - Store image paths to database.(DONE)
 - Multiple Upload.(Done)
+1. Upload app to EC2.(DONE)
 
-1. Upload app to EC2.
+EMERGENCY:
+1. connect ec2 website from the outside internet.
+2. gunicorn start.sh script.
+3. A1 report.
+
+FOR OPTIMIZATION:
 2. Image delete function.
 3. Make pages looks better.
 
