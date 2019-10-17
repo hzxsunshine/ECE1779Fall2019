@@ -60,9 +60,6 @@ def register():
         if check_name(request.form['username']) is not None:
             msg = 'Choose Another Cool Username Please!'
             return render_template('register.html', msg=msg)
-        if len(request.form['username']) > 50:
-            msg = 'Username is too long!'
-            return render_template('register.html', msg=msg)
         if len(request.form['username']) > 30:
             msg = 'Username is too long!'
             return render_template('register.html', msg=msg)
