@@ -43,7 +43,7 @@ In the config.py file, you need to set up your own database first!
 - Upload app to EC2.(DONE)
 - connect to ec2 website from the outside internet;(DONE)
 - gunicorn start.sh script;(DONE)
-- gen.py upload test.(DONE)
+- gen.py upload test;(DONE)
 
 EMERGENCY:
 3. A1 report.
