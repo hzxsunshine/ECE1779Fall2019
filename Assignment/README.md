@@ -44,9 +44,7 @@ In the config.py file, you need to set up your own database first!
 - connect to ec2 website from the outside internet;(DONE)
 - gunicorn start.sh script;(DONE)
 - gen.py upload test;(DONE)
-
-EMERGENCY:
-3. A1 report.
+- A1 report.(DONE)
 
 FOR OPTIMIZATION:
 2. Image delete function;
