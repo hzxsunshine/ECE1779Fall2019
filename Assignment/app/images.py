@@ -1,5 +1,4 @@
-from flask import render_template, redirect, url_for, session
-from flask import request, send_from_directory
+from flask import render_template, redirect, url_for, session, request
 import os
 from app import webapp
 from .utils import save_file, validator
@@ -7,12 +6,12 @@ from werkzeug.utils import secure_filename
 
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 
-# limit the uploaded files' types.
+
 def allowed_file(filename):
     return '.' in filename and \
             filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-#upload webpage
+
 @webapp.route('/upload', methods=['GET', 'POST'])
 def upload():
     if 'Authenticated' not in session:
@@ -49,12 +48,16 @@ def upload():
         for file in files:
             if file and allowed_file(file.filename):
                 filename = secure_filename(file.filename)
-                save_file(username, file, filename)
-        return render_template('upload.html', msg='Successfully Uploaded')
+                msg = save_file(username, file, filename)
+        return render_template('upload.html', msg=msg)
 
     return render_template('upload.html', msg='Pleas Upload an Image')
 
-#gallery webpage
+
+# @webapp.route('/static/sunshine/<filename>')
+# def send_image(filename):
+#     return send_from_directory("images", filename)
+
 @webapp.route('/gallery', methods=['GET'])
 def gallery():
     if 'Authenticated' not in session:
@@ -75,7 +78,6 @@ def gallery():
 
     return render_template("gallery.html", image_names=thumb_names, username=username)
 
-#detail page for a specific image. each page contain 2 images: one for ocr and the other for org.
 @webapp.route('/detail/<image_name>', methods=['GET'])
 def detail(image_name):
     if 'Authenticated' not in session:
@@ -85,7 +87,7 @@ def detail(image_name):
     return render_template("detail.html", username=username, image_name=image_name)
 
 
-#for easy testing, api/upload page.
+
 @webapp.route('/api/upload', methods=['GET'])
 def script_upload():
     return render_template('api_upload.html')

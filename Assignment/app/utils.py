@@ -1,11 +1,13 @@
 import hashlib, uuid
 from .database import connect_to_database,  get_db, teardown_db
 import os
-import  app.ocr.text_detection as text_detection
+from .ocr import text_detection
 from .ocr.thumbnails import thumbnails
 from datetime import timedelta
 from app import webapp
 from flask import session
+from mysql.connector import Error
+from mysql.connector import errorcode
 
 #the login-in will be expired in 48 hours
 @webapp.before_request
@@ -25,9 +27,13 @@ def save_reg(username,password):
 
     #connect to database
     cnx = get_db()
-    query = ''' INSERT INTO user (username,password,salt) VALUES (%s, %s, %s)'''
-    cnx.cursor().execute(query,(username, hashpswd, salt))
-    cnx.commit()
+    try:
+        query = ''' INSERT INTO user (username,password,salt) VALUES (%s, %s, %s)'''
+        cnx.cursor().execute(query,(username, hashpswd, salt))
+        cnx.commit()
+    except mysql.connector.Error as error:
+        cnx.rollback()
+        return 'Failed to Save'
 
     #make a user dict
     ROOT_PATH = os.path.join(os.path.dirname(__file__),'static')
@@ -39,6 +45,7 @@ def save_reg(username,password):
     os.mkdir(PATH_USER_OCR)
     os.mkdir(PATH_USER_ORIGIN)
     os.mkdir(PATH_USER_THUMBNAILS)
+    return 'Successful Registered'
 
 def check_name(username):
     cnx = get_db()
@@ -97,9 +104,14 @@ def save_file(username, file, filename):
     row = cursor.fetchone()
     user_id = int(row[0])
 
-    query = ''' INSERT INTO images (id, imagename, origin,ocr,thumbnails) VALUES (%s,%s,%s, %s, %s)'''
-    cursor.execute(query, (user_id, filename,ORIGIN_PATH,OCR_PATH,THUMBNAILS_PATH))
-    cnx.commit()
+    try:
+        query = ''' INSERT INTO images (id, imagename, origin,ocr,thumbnails) VALUES (%s,%s,%s, %s, %s)'''
+        cursor.execute(query, (user_id, filename,ORIGIN_PATH,OCR_PATH,THUMBNAILS_PATH))
+        cnx.commit()
+    except mysql.connector.Error as error:
+        cnx.rollback()
+        return 'Failed to Save'
+    return 'Successfully Uploaded'
 
 
 
@@ -108,4 +120,3 @@ def validator(username, password):
         return 'Username/Password is Invalidated'
     if check_password(username,password) is None:
         return 'Username/Password is Invalidated'
-

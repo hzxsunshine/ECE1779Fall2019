@@ -1,9 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, session
-import re
-from .database import connect_to_database,  get_db, teardown_db
 from app import webapp
 from .utils import check_name, save_reg, check_password
-from werkzeug.utils import secure_filename
 
 @webapp.route('/login', methods=['GET', 'POST'])
 def login():
@@ -13,6 +10,7 @@ def login():
     msg = ''
     # Check if "username" and "password" POST requests exist (user submitted form)
     if request.method == 'POST' and 'username' in request.form and 'password' in request.form:
+        #check username validated or not.
         if not check_name(request.form['username']):
             msg = 'Invalid Username'
             return render_template('login.html', msg=msg)
@@ -68,8 +66,7 @@ def register():
         else:
             username = request.form['username']
             password = request.form['password']
-            save_reg(username,password)
-            msg = 'Successful Registered'
+            msg = save_reg(username,password)
     elif request.method == 'POST':
         # Form is empty... (no POST data)
         msg = 'Please fill out the form!'

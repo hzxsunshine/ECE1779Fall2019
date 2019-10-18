@@ -1,5 +1,3 @@
-#thumbnail
-#from PIL import Image
 from wand.image import Image
 
 def thumbnails(path, thumbnails_path):
