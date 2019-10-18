@@ -1,8 +1,9 @@
-from flask import render_template, redirect, url_for, session, request
+from flask import render_template, redirect, url_for, session, request, Response
 import os
 from app import webapp
 from .utils import save_file, validator
 from werkzeug.utils import secure_filename
+from flask import jsonify
 
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 
@@ -94,18 +95,17 @@ def script_upload():
 
 @webapp.route('/api/upload', methods=['POST'])
 def api_upload():
-    msg = 'Pleas Upload an Image'
     username = request.form['username']
     password = request.form['password']
     if validator(username,password) is not None:
         msg = 'Invalid Username/Password'
-        return render_template('api_upload.html', msg=msg)
+        return jsonify(msg = msg, state = 422)
 
     if request.method == 'POST':
         # check if the post request has the file part
         if 'file' not in request.files:
             msg = 'No Selected File'
-            return render_template('api_upload.html', msg=msg)
+            return jsonify(msg = msg, state = 400)
 
         #file = request.files['file']
         files = request.files.getlist('file')
@@ -115,28 +115,26 @@ def api_upload():
         for file in files:
             if file.filename == '':
                 msg = 'No Selected File'
-                return   render_template('api_upload.html', msg=msg)
+                return jsonify(msg = msg, state = 400)
 
             if not allowed_file(file.filename):
                 msg = 'Invalid File Type'
-                return   render_template('api_upload.html', msg=msg)
+                return jsonify(msg = msg, state = 406)
 
             if request.content_length > 5 * 1024 * 1024:
                 msg = 'Files are Too Big!'
-                return render_template('api_upload.html', msg=msg)
+                return jsonify(msg = msg, state = 406)
 
         for file in files:
             if file and allowed_file(file.filename):
                 filename = secure_filename(file.filename)
                 save_file(username, file, filename)
-        msg = 'Successfully Uploaded'
+        msg = 'Successfully Uploaded!'
 
         session.pop('Authenticated', None)
         session.pop('id', None)
         session.pop('username', None)
 
-        return render_template('api_upload.html', msg=msg)
-
-    return render_template('api_upload.html', msg=msg)
+        return jsonify(msg = msg, state = 200)
 
 

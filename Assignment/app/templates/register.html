@@ -21,11 +21,15 @@
 				<label for="password">
 					<i class="fas fa-lock"></i>
 				</label>
-				<input type="password" name="password" placeholder="Password" id="password" required>
+				<a href=# title="Password should contain 7 to 16 characters and it should contain at least a digit, a lower case and a upper case.">
+					<input type="password" name="password" placeholder="Password" id="password" required>
+				</a>
 				<label for="repassword">
 					<i class="fas fa-lock"></i>
 				</label>
+				<a href=# title="Repeated password should be same as the password">
 				<input type="password" name="repassword" placeholder="Repeat Password" id="repassword" required>
+				</a>
 				<div class="msg">{{ msg }}</div>
 				<input type="submit" value="Register">
 			</form>

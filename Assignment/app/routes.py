@@ -1,6 +1,8 @@
-from flask import Flask, render_template, request, redirect, url_for, session
+from flask import Flask, render_template, request, redirect, url_for, session, Response
 from app import webapp
 from .utils import check_name, save_reg, check_password
+from flask import jsonify
+
 
 @webapp.route('/login', methods=['GET', 'POST'])
 def login():
@@ -45,7 +47,8 @@ def register():
     rules = [lambda s: any(x.isupper() for x in s),  # must have at least one uppercase
              lambda s: any(x.islower() for x in s),  # must have at least one lowercase
              lambda s: any(x.isdigit() for x in s),  # must have at least one digit
-             lambda s: len(s) >= 7  # must be at least 7 characters
+             lambda s: len(s) >= 7, # must be at least 7 characters
+             lambda s: len(s) <= 17  # must be at most 16 characters
              ]
     # Output message if something goes wrong...
     msg = ''
@@ -62,7 +65,7 @@ def register():
             msg = 'Username is too long!'
             return render_template('register.html', msg=msg)
         if not all(rule(request.form['password']) for rule in rules):
-            msg = 'Please use a stronger password'
+            msg = 'Password is Not Accepted!'
         else:
             username = request.form['username']
             password = request.form['password']
@@ -88,7 +91,8 @@ def api_register():
     rules = [lambda s: any(x.isupper() for x in s),  # must have at least one uppercase
              lambda s: any(x.islower() for x in s),  # must have at least one lowercase
              lambda s: any(x.isdigit() for x in s),  # must have at least one digit
-             lambda s: len(s) >= 7  # must be at least 7 characters
+             lambda s: len(s) >= 7,  # must be at least 7 characters
+             lambda s: len(s) <= 17  # must be at most 7 characters
              ]
     # Output message if something goes wrong...
     msg = ''
@@ -97,20 +101,20 @@ def api_register():
         # check the availability of username
         if check_name(request.form['username']) is not None:
             msg = 'Choose Another Cool Username Please!'
-            return render_template('api_register.html', msg=msg)
+            return jsonify(msg = msg, state = 406)
         if len(request.form['username']) > 30:
             msg = 'Username is too long!'
-            return render_template('api_register.html', msg=msg)
+            return jsonify(msg = msg, state = 406)
         if not all(rule(request.form['password']) for rule in rules):
-            msg = 'Please use a stronger password'
+            msg = 'Password is not Accepted!'
+            return jsonify(msg = msg, state = 406)
         else:
             username = request.form['username']
             password = request.form['password']
             save_reg(username,password)
             msg = 'Successful Registered'
+            return jsonify(msg = msg, state = 200)
     elif request.method == 'POST':
         # Form is empty... (no POST data)
         msg = 'Please fill out the form!'
-    # Show registration form with message (if any)
-    return render_template('api_register.html', msg=msg)
-
+        return jsonify(msg = msg, state = 406)
